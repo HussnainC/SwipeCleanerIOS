@@ -10,9 +10,22 @@
 		7EDDFD742D95412500EAD3CD /* Swipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Swipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		7ECEDAE52D96A0CC007E09A4 /* Exceptions for "Swipe" folder in "Swipe" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 7EDDFD732D95412500EAD3CD /* Swipe */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7EDDFD762D95412500EAD3CD /* Swipe */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				7ECEDAE52D96A0CC007E09A4 /* Exceptions for "Swipe" folder in "Swipe" target */,
+			);
 			path = Swipe;
 			sourceTree = "<group>";
 		};
@@ -255,8 +268,11 @@
 				DEVELOPMENT_TEAM = DP25JZZ9PN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Swipe/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swipe Cleaner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need permission to save and delete media from your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photos to display video thumbnails.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -291,8 +307,11 @@
 				DEVELOPMENT_TEAM = DP25JZZ9PN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Swipe/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Swipe Cleaner";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "We need permission to save and delete media from your library.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "We need access to your photos to display video thumbnails.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

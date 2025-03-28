@@ -5,6 +5,7 @@
 //  Created by Hussnain on 27/03/2025.
 //
 import SwiftUI
+import PhotosUI
 
 struct IntroModel: Identifiable {
     let id = UUID()
@@ -17,7 +18,7 @@ struct IntroModel: Identifiable {
 }
 
 struct IntroView : View{
-    @StateObject private var appState = AppState()
+    @EnvironmentObject private var appState: AppState
     let intros: [IntroModel] = [
         IntroModel(title: "Clean Photos", des: "Swipe left to delete unwanted photos instantly", img: "intro_1",basImage: "swipe_left_hand"),
         IntroModel(title: "Keep Photos", des: "Swipe right to save and secure your favorite photos.", img: "intro_2",basImage: "swipe_right_hand"),
@@ -112,6 +113,7 @@ struct IntroView : View{
         }
       
     }
+   
     var pagingControl: some View {
         HStack {
             ForEach(0..<intros.count,id:\.self) { index in
@@ -130,5 +132,5 @@ struct IntroView : View{
 
 
 #Preview {
-    IntroView()
+    IntroView().environmentObject(AppState())
 }

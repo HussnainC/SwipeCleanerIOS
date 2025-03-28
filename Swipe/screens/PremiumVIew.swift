@@ -12,3 +12,7 @@ struct PremiumVIew:View {
         Text("Premium View")
     }
 }
+
+#Preview {
+    PremiumVIew()
+}

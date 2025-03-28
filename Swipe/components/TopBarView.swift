@@ -24,7 +24,7 @@ struct TopBarView: View {
                         
                         .font(.title2)
                     
-                        .padding(6)
+                       
 
                 }
             }

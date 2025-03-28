@@ -16,10 +16,9 @@ struct LanguageModel: Identifiable {
 }
 
 struct LanguageView: View {
-    @StateObject private var appState = AppState()
+    @EnvironmentObject private var appState: AppState
     @Environment(\.presentationMode) var presentationMode
     @State private var currentLang : String = "en"
-
     @State private var navigateToIntro = false
     let languages: [LanguageModel] = [
         LanguageModel(title: "English", code: "en", flag: "flag_en"),
@@ -29,10 +28,7 @@ struct LanguageView: View {
         LanguageModel(title: "Korean", code: "kr", flag: "flag_kr"),
         LanguageModel(title: "French", code: "fr", flag: "flag_fr")
     ]
-    init(){
-        currentLang = self.appState.selectedLanguage
-    }
-
+   
     var body: some View {
         ZStack{
             Color("bgColor").ignoresSafeArea()
@@ -51,11 +47,7 @@ struct LanguageView: View {
                         ForEach(languages) { item in
                             Button(action: {
                                 currentLang = item.code
-                                if appState.isFirstRun {
-                                    navigateToIntro = true
-                                } else {
-                                    presentationMode.wrappedValue.dismiss()
-                                }
+                              
                             }) {
                                 HStack {
                                     Image(item.flag)
@@ -70,6 +62,8 @@ struct LanguageView: View {
                                     
                                     if item.code == currentLang {
                                         Image("lang_check")
+                                            .transition(.scale)
+                                            .animation(.easeInOut(duration: 0.3), value: item.code == currentLang)
                                     }
                                 }
                                 .frame(maxWidth: .infinity, alignment: .init(horizontal: .leading, vertical: .center))
@@ -90,10 +84,10 @@ struct LanguageView: View {
                 Button(action:{
                     appState.selectedLanguage = currentLang
                     if(appState.isFirstRun){
-                        presentationMode.wrappedValue.dismiss()
+                        navigateToIntro=true
                     }else
                     {
-                        navigateToIntro=true
+                        presentationMode.wrappedValue.dismiss()
                     }
                 }){
                     Text("Done").padding(.vertical,12).padding(.horizontal,20).background(Color("primary")).cornerRadius(20).foregroundColor(.white)
@@ -102,6 +96,8 @@ struct LanguageView: View {
             
         }.navigationBarBackButtonHidden().navigationDestination(isPresented: $navigateToIntro) {
             IntroView()
+        }.onAppear {
+            currentLang = appState.selectedLanguage 
         }
     }
 }
@@ -109,7 +105,7 @@ struct LanguageView: View {
 
 
 #Preview{
-    LanguageView()
+    LanguageView().environmentObject(AppState())
 }
 
 

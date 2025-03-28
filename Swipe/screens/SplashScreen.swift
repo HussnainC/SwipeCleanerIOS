@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct SplashScreen: View {
-    @State var navigateAction:Int? = 0
-
-    @StateObject private var appState = AppState()
+    @State private var moveToNext:Bool = false
+    @EnvironmentObject private var appState: AppState
+    
     var body: some View {
         ZStack {
             Color("bgColor").ignoresSafeArea()
@@ -42,12 +42,13 @@ struct SplashScreen: View {
                 // Progress Indicator
                 VStack(spacing: 10) {
                     ProgressView()
-                        .progressViewStyle(LinearProgressViewStyle())
+                        .progressViewStyle(LinearProgressViewStyle(tint: Color("primary")))
                         .frame(width: 180, height: 10)
                         .background(Color.gray.opacity(0.3))
                         .cornerRadius(5)
                 }
                 .padding(.bottom, 40)
+                
                 
                 // Description Text
                 Text("Just getting started? Lets take a tour of this app’s capabilities!")
@@ -63,27 +64,24 @@ struct SplashScreen: View {
                     .font(.caption)
                     .foregroundColor(.gray)
                     .padding(.bottom, 20)
-            }
-        }.onAppear(perform: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                if(appState.isFirstRun){
-                    navigateAction = 1
-                }else
-                {
-                    navigateAction=2
+            }.onAppear(perform: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    moveToNext=true
                 }
-            }
-        }).navigationDestination(item:$navigateAction) { destination in
-            if(destination==1){
+            })
+        }.navigationDestination(isPresented:$moveToNext) {
+            if(appState.isFirstRun){
                 LanguageView()
-            }else if(destination==2){
+            }else
+            {
                 HomeView()
             }
+            
         }
     }
 }
 
 #Preview {
-    SplashScreen()
+    SplashScreen().environmentObject(AppState())
 }
 
