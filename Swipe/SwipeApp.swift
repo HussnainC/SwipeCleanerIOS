@@ -14,4 +14,9 @@ struct SwipeApp: App {
             ContentView()
         }
     }
+
+}
+class AppState: ObservableObject {
+    @AppStorage(AppConstants.FIRST_RUN_KEY) var isFirstRun: Bool = true
+    @AppStorage(AppConstants.LANG_CODE_KEY) var selectedLanguage: String = "en"
 }
