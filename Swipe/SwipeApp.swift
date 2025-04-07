@@ -13,12 +13,12 @@ import StoreKit
 struct SwipeApp: App {
     @StateObject var appState = AppState()
     @StateObject var proState = ProState()
-    init(){
-        startTransactionListener(proState: proState)
-    }
+   
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(appState).environmentObject(proState)
+            ContentView().environmentObject(appState).environmentObject(proState).onAppear{
+                startTransactionListener(proState: proState)
+            }
         }
     }
     func startTransactionListener(proState: ProState) {

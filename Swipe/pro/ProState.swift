@@ -1,6 +1,6 @@
 
 
-import Foundation
+
 import StoreKit
 
 class ProState: ObservableObject {
