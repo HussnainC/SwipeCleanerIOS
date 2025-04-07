@@ -11,7 +11,8 @@ import Photos
 struct MediaView:View {
     @State var selectedTab: Int = 1
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject private var appState: AppState
+    @EnvironmentObject private  var appState: AppState
+    @State var showSwipe: Bool = false
     
     var body: some View {
         ZStack{
@@ -33,15 +34,49 @@ struct MediaView:View {
                         
                     }
                 }.padding(.top).padding(.horizontal)
-                ScrollView{
-                    LazyVStack(spacing: 15) {
-                        ForEach(appState.files, id: \.id) { file in
-                            MediaItemView(file: file)
-                                .padding(.horizontal, 16)
+                if appState.isLoading {
+                    Spacer()
+                    ProgressView("Loading...")
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .font(.caption)
+                        .padding()
+                    Spacer()
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 15) {
+                            ForEach(appState.files, id: \.id) { file in
+                                Button(action: {
+                                    if let index = appState.files.firstIndex(where: { $0.id == file.id }) {
+                                        appState.selectedPosition = index
+                                        showSwipe = true
+                                    }
+                                }) {
+                                    MediaItemView(file: file, appState: appState)
+                                        .padding(.horizontal, 16)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
                         }
+                        .padding(.vertical, 10)
                     }
-                    .padding(.vertical, 10)
                 }
+                //                ScrollView{
+                //                    LazyVStack(spacing: 15) {
+                //                        ForEach(appState.files, id: \.id) { file in
+                //                            Button(action:{
+                //                                if let index = appState.files.firstIndex(where: { $0.id == file.id }) {
+                //                                           appState.selectedPosition = index
+                //                                           showSwipe = true
+                //                                       }
+                //
+                //                            },label: {
+                //                                MediaItemView(file: file,appState: appState)
+                //                                    .padding(.horizontal, 16)
+                //                            }).buttonStyle(PlainButtonStyle())
+                //                        }
+                //                    }
+                //                    .padding(.vertical, 10)
+                //                }
                 HStack(alignment: .center){
                     Spacer()
                     TabButton(title: "Photos", icon: "ic_photos", isSelected: selectedTab==1, onTabClick: {
@@ -65,31 +100,36 @@ struct MediaView:View {
             if oldValue != newValue {
                 appState.loadMediaFiles(mediaType: newValue)
             }
+        }.navigationDestination(isPresented: $showSwipe) {
+            SwipeView()
         }
     }
     
     
-    struct TabButton:View {
-        let title: String
-        let icon:String
-        let isSelected:Bool
-        let onTabClick: (() -> Void)
-        var body: some View {
-            Button {
-                onTabClick()
-            } label: {
-                VStack(spacing:5){
-                    Image(icon).resizable().scaledToFill().frame(width: 35, height: 26)
-                    Text(title).font(.caption).foregroundColor(.black)
-                }.opacity(isSelected ? 1 : 0.3)
-            }
-            
+    
+    
+}
+struct TabButton:View {
+    let title: String
+    let icon:String
+    let isSelected:Bool
+    let onTabClick: (() -> Void)
+    var body: some View {
+        Button {
+            onTabClick()
+        } label: {
+            VStack(spacing:5){
+                Image(icon).resizable().scaledToFill().frame(width: 35, height: 26)
+                Text(title).font(.caption).foregroundColor(.black)
+            }.opacity(isSelected ? 1 : 0.3)
         }
+        
     }
 }
 
 private struct MediaItemView: View {
     let file: FileModel
+    let appState: AppState
     @State private var uiImage: UIImage? = nil
     
     var body: some View {
@@ -105,7 +145,9 @@ private struct MediaItemView: View {
                 ProgressView()
                     .frame(width: 60, height: 60)
                     .onAppear {
-                        loadThumbnail()
+                        appState.loadThumbnail(file:file,size:60,onComplete: {img in
+                            self.uiImage = img
+                        })
                     }
             }
             VStack(alignment: .leading) {
@@ -125,48 +167,9 @@ private struct MediaItemView: View {
         .shadow(color: Color.black.opacity(0.1), radius: 3)
     }
     
-    private func loadThumbnail() {
-        let assetResult = PHAsset.fetchAssets(withLocalIdentifiers: [file.id], options: nil)
-        guard let asset = assetResult.firstObject else { return }
-        
-        let manager = PHImageManager.default()
-        let options = PHImageRequestOptions()
-        options.isSynchronous = true
-        
-        if file.fileType == 1 {
-            manager.requestImage(for: asset, targetSize: CGSize(width: 60, height: 60), contentMode: .aspectFill, options: options) { image, _ in
-                self.uiImage = image
-            }
-        } else {
-            let videoOptions = PHVideoRequestOptions()
-            videoOptions.deliveryMode = .fastFormat
-            manager.requestAVAsset(forVideo: asset, options: videoOptions) { (avAsset, _, _) in
-                guard let urlAsset = avAsset as? AVURLAsset else { return }
-                self.extractVideoThumbnail(url: urlAsset.url)
-            }
-        }
-    }
     
-    private func extractVideoThumbnail(url: URL) {
-        DispatchQueue.global(qos: .background).async {
-            let asset = AVAsset(url: url)
-            let generator = AVAssetImageGenerator(asset: asset)
-            generator.appliesPreferredTrackTransform = true
-            let time = CMTime(seconds: 1, preferredTimescale: 600)
-            do {
-                let imageRef = try generator.copyCGImage(at: time, actualTime: nil)
-                let image = UIImage(cgImage: imageRef)
-                DispatchQueue.main.async {
-                    self.uiImage = image
-                }
-            } catch {
-                print("Failed to generate thumbnail: \(error)")
-            }
-        }
-    }
     
 }
-
 
 #Preview {
     MediaView(selectedTab: 1).environmentObject(AppState())
