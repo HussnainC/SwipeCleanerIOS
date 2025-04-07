@@ -6,7 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		7E546FA62DA3BBDE00B19D89 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E546FA52DA3BBDE00B19D89 /* StoreKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
+		7E546FA52DA3BBDE00B19D89 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		7EDDFD742D95412500EAD3CD /* Swipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Swipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -36,16 +41,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7E546FA62DA3BBDE00B19D89 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7E546FA42DA3BBDE00B19D89 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7E546FA52DA3BBDE00B19D89 /* StoreKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		7EDDFD6B2D95412500EAD3CD = {
 			isa = PBXGroup;
 			children = (
 				7EDDFD762D95412500EAD3CD /* Swipe */,
+				7E546FA42DA3BBDE00B19D89 /* Frameworks */,
 				7EDDFD752D95412500EAD3CD /* Products */,
 			);
 			sourceTree = "<group>";

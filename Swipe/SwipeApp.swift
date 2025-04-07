@@ -7,13 +7,36 @@
 
 import SwiftUI
 import Photos
+import StoreKit
 
 @main
 struct SwipeApp: App {
     @StateObject var appState = AppState()
+    @StateObject var proState = ProState()
+    init(){
+        startTransactionListener(proState: proState)
+    }
     var body: some Scene {
         WindowGroup {
-            ContentView().environmentObject(appState)
+            ContentView().environmentObject(appState).environmentObject(proState)
+        }
+    }
+    func startTransactionListener(proState: ProState) {
+        Task.detached(priority: .background) {
+            for await result in Transaction.updates {
+                guard case .verified(let transaction) = result else {
+                    continue
+                }
+                print("Transaction update: \(transaction.productID)")
+
+                // Finish the transaction to prevent it from being re-processed
+                await transaction.finish()
+                
+                // Update app state
+                await MainActor.run {
+                    proState.refreshState()
+                }
+            }
         }
     }
     

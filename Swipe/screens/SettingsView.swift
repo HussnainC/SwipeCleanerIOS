@@ -73,7 +73,7 @@ struct SettingsView:View {
                 LanguageView()
             }else if destination == 4 {
                 //PremiumUpgrade
-                PremiumVIew()
+                PremiumView()
             }
         }
         

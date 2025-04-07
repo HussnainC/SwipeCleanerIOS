@@ -78,7 +78,7 @@ struct HomeView: View {
             }else if destId==2{
                 MediaView(selectedTab: 2)
             } else if destId == 0{
-                PremiumVIew()
+                PremiumView()
             }else if destId == 6{
                 SettingsView()
             }
